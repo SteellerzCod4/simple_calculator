@@ -54,7 +54,8 @@ class Calculator:
             result = self.__neg__(result)
         return result
 
-    def __check_sign(self, user_input):
+    @staticmethod
+    def __check_sign(user_input):
         sign = user_input[0]
         if sign == "-" or sign == "+":
             return sign
@@ -78,7 +79,7 @@ class Calculator:
         if int(result) == float(result):
             result = int(result)
 
-        return f"{left_operand_to_output} {operation_name} {right_operand_to_output} = {result}"
+        return f"{left_operand_to_output.strip()} {operation_name} {right_operand_to_output.strip()} = {result}"
 
     def start_working(self):
         process_functions = {
@@ -87,10 +88,14 @@ class Calculator:
         }
         print(HELLO_MESSAGE)
         while True:
-            user_input = input(INPUT_MESSAGE).lower()
+            user_input = input(INPUT_MESSAGE).lower().strip()
 
             input_type = self.__validator.validate_user_input(user_input)
-            print(process_functions[input_type](user_input))
+            if process_functions.get(input_type):
+                print(process_functions[input_type](user_input))
+            else:
+                print(f"{WRONG_INPUT_MESSAGE}{input_type}")
+
             user_input = input(CONTINUE_MESSAGE).lower()
             while self.__validator.not_correct_continue_input(user_input):
                 print(INCORRECT_CONTINUE_MESSAGE)
